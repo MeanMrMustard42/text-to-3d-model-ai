@@ -1,8 +1,27 @@
+'use client'
+
 import Image from "next/image";
 import styles from "./page.module.css";
+import React, { useState } from 'react';
+import { TextField, Button } from '@mui/material';
 
-export default function Home() {
-  return (
+
+  function Home() {
+    function generate(formData) {
+      const query = formData.get("query");
+      alert(`You searched for '${query}'`);
+    }
+    return (
+      
+      <form action={generate}>
+        <input name="query"/>
+        <Button variant="contained" type="submit" size="small">Generate</Button>
+      </form>
+    );
+}
+  export default Home;
+  
+  /*return (
     <main className={styles.main}>
       <div className={styles.description}>
         <p>
@@ -93,3 +112,4 @@ export default function Home() {
     </main>
   );
 }
+*/
