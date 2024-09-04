@@ -1,115 +1,86 @@
-'use client'
-
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client' 
+ 
 import React, { useState } from 'react';
-import { TextField, Button } from '@mui/material';
+import Paper from '@mui/material/Paper';
+import InputBase from '@mui/material/InputBase';
+import Divider from   
+ '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
+import Drawer from '@mui/material/Drawer';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';   
+import ListItemText from '@mui/material/ListItemText';   
+import Box from '@mui/joy/Box';
 
 
-  function Home() {
-    function generate(formData) {
-      const query = formData.get("query");
-      alert(`You searched for '${query}'`);
-    }
-    return (
-      
-      <form action={generate}>
-        <input name="query"/>
-        <Button variant="contained" type="submit" size="small">Generate</Button>
-      </form>
-    );
-}
-  export default Home;
-  
-  /*return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.js</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+function Home() {
+  const [query, setQuery] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    alert("pls")
+    //generate(query);
+  };
 
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
+  const toggleDrawer = () => {
+    setIsOpen(!isOpen);
+  };
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
+  function generate(formData) {
+    const query = formData.get("query");
+    alert(`You searched for '${query}'`);
+  }
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+  return (
+    <Paper
+      component="form" // The form is directly on the Paper component
+      onSubmit={handleSubmit}
+      sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 400 }}
+    >
+      <InputBase
+        sx={{ ml: 1, flex: 1 }}
+        placeholder="Enter a word or phrase, then press return"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+      />
+      <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
+      <IconButton color="primary" sx={{ p: '10px' }} aria-label="menu" onClick={toggleDrawer}>
+        <MenuIcon />
+      </IconButton>
+
+      {/*sidebar stuff*/}
+      <Drawer anchor="right" open={isOpen} onClose={toggleDrawer} size="lg">
+      <List>
+        <ListItem button onClick={toggleDrawer}>
+          <ListItemIcon>
+            {/* Your icon here */}
+          </ListItemIcon>
+          <ListItemText primary="About" />
+        </ListItem>
+        <ListItem button onClick={toggleDrawer}>
+          <ListItemIcon>
+            {/* Your icon here */}
+          </ListItemIcon>
+          <ListItemText primary="Credits" />
+        </ListItem>
+      </List>
+      <Box
+          sx={{
+            display: 'flex',
+            gap: 1,
+            p: 1.5,
+            pb: 2,
+            borderTop: '1px solid',
+            borderColor: 'divider',
+          }}
+        ></Box>
+    </Drawer>
+    </Paper>
   );
 }
-*/
+
+export default Home;
