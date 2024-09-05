@@ -228,3 +228,7 @@
     transform: rotate(0deg);
   }
 }
+
+.my-container {
+  background: linear-gradient(to right, #f06b6b, #100496);
+}
