@@ -20,11 +20,11 @@ function Home() {
   const [query, setQuery] = useState('');
   const [isOpen, setIsOpen] = useState(false);
 
-  useEffect(() => { document.body.style.backgroundColor = 'gray' }, []) 
+  //useEffect(() => { document.body.style.backgroundColor = 'gray' }, []) 
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    alert("pls")
+    alert(query)
     //generate(query);
   };
 
@@ -35,6 +35,9 @@ function Home() {
   function generate(formData) {
     const query = formData.get("query");
     alert(`You searched for '${query}'`);
+    ckpt_id = "openai/shap-e"
+    pipe = ShapEPipeline.from_pretrained(repo).to("cuda")
+
   }
 
 
@@ -59,13 +62,13 @@ function Home() {
       <Box sx={{ display: 'flex'}}>
       <Drawer anchor="left" open={isOpen} onClose={toggleDrawer} size="lg">
       <DialogTitle>What is this?⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</DialogTitle>
-     <DialogContentText>⠀⠀This is an OpenAI-powered text-to-3D </DialogContentText>
+     <DialogContentText>⠀⠀This is an AI-powered text-to-3D </DialogContentText>
      <DialogContentText>⠀⠀model. Simply enter in a word or phrase </DialogContentText>
      <DialogContentText>⠀⠀in the box and press return to get started!</DialogContentText>
      <DialogTitle>Credits</DialogTitle>
      <DialogContentText>⠀⠀Steven Suarez, B.A Applied Computing,</DialogContentText>
      <DialogContentText>⠀⠀University of Washington, Bothell.</DialogContentText>
-     <DialogContentText>⠀⠀Model: SHAP-e Text-to-3D, OpenAI.</DialogContentText>
+     <DialogContentText>⠀⠀Model: Meshy Text-to-3D</DialogContentText>
     </Drawer>
     </Box>
     </Paper>
