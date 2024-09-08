@@ -14,29 +14,51 @@ import ListItemIcon from '@mui/material/ListItemIcon';  
 import ListItemText from '@mui/material/ListItemText';   
 import Box from '@mui/joy/Box';
 import { DialogContentText, DialogTitle } from '@mui/material';
+import axios from 'axios'
+
 
 
 function Home() {
   const [query, setQuery] = useState('');
   const [isOpen, setIsOpen] = useState(false);
 
-  //useEffect(() => { document.body.style.backgroundColor = 'gray' }, []) 
+  //useEffect(() => { document.body.style.backgroundColor = 'gray' }, [])
+
+  
 
   const handleSubmit = (event) => {
     event.preventDefault();
     alert(query)
-    //generate(query);
+    generate(query);
   };
 
   const toggleDrawer = () => {
     setIsOpen(!isOpen);
   };
 
-  function generate(formData) {
-    const query = formData.get("query");
-    alert(`You searched for '${query}'`);
-    ckpt_id = "openai/shap-e"
-    pipe = ShapEPipeline.from_pretrained(repo).to("cuda")
+  async function generate(userPrompt) {
+    //const query = formData.get("query");
+    alert(`You searched for '${userPrompt}'`);
+    const headers = { Authorization: `Bearer ${process.env.NEXT_PUBLIC_MESHY_API_KEY}` };
+    const payload = {
+      mode: 'preview',
+      prompt: userPrompt,
+    art_style: 'realistic',
+    negative_prompt: 'low quality, low resolution, low poly, ugly',
+};
+
+try {
+const response = await axios.post(
+'https://api.meshy.ai/v2/text-to-3d',
+payload,
+{ headers }
+);
+console.log(response.data);
+} catch (error) {
+console.error(error);
+}
+
+
 
   }
 
