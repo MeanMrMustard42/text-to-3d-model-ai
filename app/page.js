@@ -36,7 +36,27 @@ function Home() {
     setIsOpen(!isOpen);
   };
 
+  async function submitPrompt(payload) {
+    try {
+      const response = await axios.post(
+          'https://api.meshy.ai/v2/text-to-3d',
+          payload,
+          { headers }
+          );  
+      ID = response.data.result;
+      console.log("the response is below me!")
+      console.log(response.data);
+      console.log(taskID)
+      console.log("please post the real id!")
+      } catch (error) {
+      console.error(error);
+      }
+      return ID
+    
+  }
+
   async function generate(userPrompt) {
+    let taskID = '' // leave it empty for now
     //const query = formData.get("query");
     alert(`You searched for '${userPrompt}'`);
     const headers = { Authorization: `Bearer ${process.env.NEXT_PUBLIC_MESHY_API_KEY}` };
@@ -47,20 +67,25 @@ function Home() {
     negative_prompt: 'low quality, low resolution, low poly, ugly',
 };
 
-try {
-const response = await axios.post(
-'https://api.meshy.ai/v2/text-to-3d',
-payload,
-{ headers }
-);
-console.log(response.data);
-} catch (error) {
-console.error(error);
+taskID = submitPrompt(payload)
+let displayImagePromise = new Promise(function getImage(taskID) {
+  try {
+    const imageReq = axios.get(
+    `https://api.meshy.ai/v2/text-to-3d/${taskID}`,
+    { headers }
+    );
+    console.log(imageReq.data);
+    console.log("the url should be below me!")
+    console.log(imageReq.data.thumbnail_url)
+    } catch (error) {
+    console.log("fucc!")
+    console.error(error);
+    }
+});
+
 }
 
 
-
-  }
 
 
   return (
@@ -95,7 +120,7 @@ console.error(error);
     </Box>
     </Paper>
   );
-
 }
+
 
 export default Home;
