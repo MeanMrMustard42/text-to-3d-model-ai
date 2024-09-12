@@ -24,8 +24,6 @@ function Home() {
 
   //useEffect(() => { document.body.style.backgroundColor = 'gray' }, [])
 
-  
-
   const handleSubmit = (event) => {
     event.preventDefault();
     alert(query)
@@ -36,28 +34,83 @@ function Home() {
     setIsOpen(!isOpen);
   };
 
+
   async function submitPrompt(payload) {
+    const headers = { Authorization: `Bearer ${process.env.NEXT_PUBLIC_MESHY_API_KEY}` };
+
     try {
       const response = await axios.post(
           'https://api.meshy.ai/v2/text-to-3d',
           payload,
           { headers }
-          );  
-      ID = response.data.result;
-      console.log("the response is below me!")
+          );
+      console.log("the result should be below me! Like right below")
+      console.log(response.data.result)
+      const taskID = response.data.result;
       console.log(response.data);
       console.log(taskID)
-      console.log("please post the real id!")
+      console.log("ID is above! hopefully")
+      return taskID
       } catch (error) {
       console.error(error);
       }
-      return ID
+      
+  }
+
+  async function waitForModelGeneration(taskID) {
+    console.log("should be in the waiting function now. taskid below in case it's wrong")
+    console.log(taskID)
+    const headers = { Authorization: `Bearer ${process.env.NEXT_PUBLIC_MESHY_API_KEY}` };
+
+      // actually start the process of getting the model
+      try {
+      const getModel = await axios.get(
+        `https://api.meshy.ai/v2/text-to-3d/${taskID}`,
+        { headers }
+        );
+        return new Promise((resolve) => {
+          console.log("did get request. full data is below. pweasee work")
+          console.log(getModel.data)
+          const intervalId = setInterval(() => {
+            const currentProgressValue = getModel.data.progress
+            console.log("current progress value is below me: ")
+            console.log(currentProgressValue)
+            console.log("preceding tasks?")
+            console.log(getModel.data.preceding_tasks)
+      
+            if (currentProgressValue === 100) {
+              clearInterval(intervalId);
+              resolve();
+              return getModel
+            }
+          }, 5000); // 1000ms
+        });
+      } catch (error) {
+        console.error(error);
+        }
     
+  }
+
+async function getModelInfo(taskID) {
+console.log("is the taskID a promise here as well? wtf")
+console.log(taskID)
+  model = await waitForModelGeneration(taskID);
+
+  try {
+    console.log(imageReq.data);
+    console.log("the url should be below me!")
+    console.log(imageReq.data.thumbnail_url)
+    } catch (error) {
+    console.log("fucc!")
+    console.error(error);
+    }
   }
 
   async function generate(userPrompt) {
     let taskID = '' // leave it empty for now
     //const query = formData.get("query");
+
+    // creating the task
     alert(`You searched for '${userPrompt}'`);
     const headers = { Authorization: `Bearer ${process.env.NEXT_PUBLIC_MESHY_API_KEY}` };
     const payload = {
@@ -67,27 +120,14 @@ function Home() {
     negative_prompt: 'low quality, low resolution, low poly, ugly',
 };
 
-taskID = submitPrompt(payload)
-let displayImagePromise = new Promise(function getImage(taskID) {
-  try {
-    const imageReq = axios.get(
-    `https://api.meshy.ai/v2/text-to-3d/${taskID}`,
-    { headers }
-    );
-    console.log(imageReq.data);
-    console.log("the url should be below me!")
-    console.log(imageReq.data.thumbnail_url)
-    } catch (error) {
-    console.log("fucc!")
-    console.error(error);
-    }
-});
+// submitting task to POST API endpoint (which should start progress on it)
+taskID = await submitPrompt(payload)
+console.log("is it a promise in the main thing?")
+console.log(taskID)
 
-}
-
-
-
-
+// wait for model to resolve and then we can get the info we need (thumbnail url)
+getModelInfo(taskID)
+  }
   return (
     <Paper
       component="form" // The form is directly on the Paper component
