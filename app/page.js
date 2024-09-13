@@ -92,7 +92,7 @@ function Home() {
   }
 
 async function getModelInfo(taskID) {
-console.log("is the taskID a promise here as well? wtf")
+console.log("is the taskID a promise here as well?")
 console.log(taskID)
   model = await waitForModelGeneration(taskID);
 
